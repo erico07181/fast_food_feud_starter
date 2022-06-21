@@ -1,6 +1,6 @@
 import * as React from "react"
 import "./Chip.css"
-import {useState} from 'react';
+
 
 export function Chip({ label = "", isActive = false, useClick = () => { } }) {
   let buttonClassName;
@@ -13,7 +13,7 @@ export function Chip({ label = "", isActive = false, useClick = () => { } }) {
   }
 
   return (
-    <button className={isActive ? "chip active" : "chip"} onClick={useClick}>
+    <button className={buttonClassName} onClick={useClick}>
       <p className="label">{label}</p>
       <span className="close" role="button">{`X`}</span>
     </button>

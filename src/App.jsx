@@ -6,6 +6,7 @@ import { Header } from "./components/Header/Header"
 import { useState } from "react";
 import Instructions from "./components/Instructions/Instructions"
 import Chip from "./components/Chip/Chip"
+import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel"
 import { createDataSet } from "./data/dataset"
 import "./App.css"
 
@@ -30,14 +31,53 @@ export function App() {
 
   const [selectedCategory, setSelectedCategory] = React.useState(null);
   const [selectedRestaurant, setSelectedRestaurant] = React.useState(null);
+  const [selectedItem, setSelectedItem] = React.useState(null);
 
 function handleClick(category){
   setSelectedCategory(category);
 }
 
 function handleClickRestaurant(restaurant){
-  setSelectedRestaurant(restaurant)
+  setSelectedRestaurant(restaurant);
 }
+
+function handleClickItem(item){
+  setSelectedItem(item);
+}
+
+function displayInstructions(){
+  if(selectedCategory == null && selectedRestaurant == null){
+    return(appInfo.instructions.start);
+  }
+  else if(selectedCategory != null && selectedRestaurant == null){
+    return(appInfo.instructions.onlyCategory);
+  }
+  else if(selectedCategory == null && selectedRestaurant != null){
+    return(appInfo.instructions.onlyRestaurant);
+  }
+  else if(selectedCategory != null && selectedRestaurant != null && selectedItem == null){
+    return(appInfo.instructions.noSelectedItem);
+  }
+  else{
+    return(appInfo.instructions.allSelected);
+  }
+}
+
+// function checkSelectedItem(part){
+//   if(selectedItem == null){
+//     return null;
+//   }
+//   else if(part == ""){
+//     return selectedItem;
+//   }
+//   else{
+//     return selectedItem[part];
+//   }
+// }
+
+var menuItems = data.filter((restaurant) => {
+  return (restaurant.food_category == selectedCategory && restaurant.restaurant == selectedRestaurant);
+})
 
   return (
     <main className="App">
@@ -70,6 +110,7 @@ function handleClickRestaurant(restaurant){
         </div>
 
         {/* INSTRUCTIONS GO HERE */}
+        <Instructions instructions={displayInstructions()}/>
 
 
         {/* MENU DISPLAY */}
@@ -77,10 +118,15 @@ function handleClickRestaurant(restaurant){
           <div className="MenuItemButtons menu-items">
             <h2 className="title">Menu Items</h2>
             {/* YOUR CODE HERE */}
+            {menuItems.map((food, i) => (
+              <Chip key={i} chip={i} label={food.item_name} isActive={food === selectedItem} useClick={() => {
+                handleClickItem(food);
+              }}/>
+            ))}
           </div>
 
           {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{/* YOUR CODE HERE */}</div>
+          <div className="NutritionFacts nutrition-facts"> {selectedItem ? <NutritionalLabel item={selectedItem}/> : null} </div>
         </div>
 
         <div className="data-sources">
