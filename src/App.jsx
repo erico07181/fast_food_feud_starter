@@ -28,9 +28,16 @@ const { data, categories, restaurants } = createDataSet()
 
 export function App() {
 
-  const [isActive, setActive] = useState(false);
+  const [selectedCategory, setSelectedCategory] = React.useState(null);
+  const [selectedRestaurant, setSelectedRestaurant] = React.useState(null);
 
-  
+function handleClick(category){
+  setSelectedCategory(category);
+}
+
+function handleClickRestaurant(restaurant){
+  setSelectedRestaurant(restaurant)
+}
 
   return (
     <main className="App">
@@ -38,9 +45,11 @@ export function App() {
       <div className="CategoriesColumn col">
         <div className="categories options">
           <h2 className="title">Categories</h2>
-            {categories.map((category, i) => 
-              <Chip key={i} label={category} category={category}></Chip>
-            )}
+            {categories.map((category, i) => (
+              <Chip key={i} label={category} category={category} isActive={category === selectedCategory} useClick={() => {
+                handleClick(category)
+              }} />
+            ))}
         </div>
         
       </div>
@@ -53,7 +62,9 @@ export function App() {
           <h2 className="title">Restaurants</h2>
           <div className="restaurants options">
             {restaurants.map((restaurant, i) => (
-              <Chip key={i} label={restaurant} category={restaurant} isActive={false}/>
+              <Chip key={i} label={restaurant} category={restaurant} isActive={restaurant === selectedRestaurant} useClick={() => {
+                handleClickRestaurant(restaurant)
+              }} />
             ))}
           </div>
         </div>
